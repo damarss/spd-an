@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SPD-in
 
-## Getting Started
+SPD-in adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SPD) dengan mudah, cepat, dan terstruktur. Aplikasi ini memudahkan pengguna dalam mengisi data identitas, membuat laporan, serta mengelola dokumen perjalanan dinas secara digital.
 
-First, run the development server:
+## Fitur Utama
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Input identitas dan jabatan pengguna
+- Pembuatan laporan perjalanan dinas secara otomatis
+- Data tersimpan secara lokal di browser (IndexedDB)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Instalasi
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone repository ini:
+   ```sh
+   git clone <repo-url>
+   cd spd-an
+   ```
+2. Install dependencies:
+   ```sh
+   pnpm install
+   # atau
+   npm install
+   # atau
+   yarn install
+   ```
+3. Jalankan aplikasi secara lokal:
+   ```sh
+   pnpm dev
+   # atau
+   npm run dev
+   # atau
+   yarn dev
+   ```
+4. Buka browser dan akses `http://localhost:3000`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Struktur Folder
 
-## Learn More
+- `app/` — Halaman Next.js dan entry point aplikasi
+- `components/` — Komponen UI dan logic aplikasi
+- `hooks/` — Custom React hooks
+- `lib/` — Library utilitas dan konfigurasi database
 
-To learn more about Next.js, take a look at the following resources:
+## Cara Penggunaan
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Isi identitas dan jabatan pada halaman identitas.
+2. Navigasi ke halaman laporan untuk membuat laporan perjalanan dinas.
+3. Data akan tersimpan secara otomatis di browser.
+4. Gunakan sidebar untuk berpindah antar halaman.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Teknologi
 
-## Deploy on Vercel
+- Next.js
+- React
+- Tailwind CSS
+- Zustand (opsional, untuk state management)
+- IndexedDB (penyimpanan lokal)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## TODO
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Upgrade state management menggunakan zustand
+- [ ] Fitur manage ketua tim
+- [ ] Fitur manage laporan dan input detail laporan
+- [ ] Export laporan ke Word/PDF

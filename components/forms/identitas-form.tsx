@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { db, Identitas } from "@/lib/db";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   nama: z.string().min(1),
@@ -33,7 +34,10 @@ const getIdentitas = async () => {
 
 const IdentitasForm = () => {
   const [identitas, setIdentitas] = React.useState<Identitas | null>(null);
-  const [identitasId, setIdentitasId] = React.useState<number | undefined>(undefined);
+  const [identitasId, setIdentitasId] = React.useState<number | undefined>(
+    undefined
+  );
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,21 +47,25 @@ const IdentitasForm = () => {
     },
   });
 
-  React.useEffect(() => {
-    async function fetchIdentitas() {
-      const data = await getIdentitas();
-      if (data) {
-        setIdentitas(data);
-        setIdentitasId(data.id); // store id for update
-        form.reset({
-          nama: data.nama || "",
-          jabatan: data.jabatan || "",
-        });
-      }
+  const fetchIdentitas = React.useCallback(async () => {
+    const data = await getIdentitas();
+    if (data) {
+      setIdentitas(data);
+      setIdentitasId(data.id); // store id for update
+      form.reset({
+        nama: data.nama || "",
+        jabatan: data.jabatan || "",
+      });
+    } else {
+      setIdentitas(null);
+      setIdentitasId(undefined);
+      form.reset({ nama: "", jabatan: "" });
     }
+  }, [form]);
+
+  React.useEffect(() => {
     fetchIdentitas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchIdentitas]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -71,11 +79,8 @@ const IdentitasForm = () => {
         await db.identitas.add({ nama, jabatan });
         toast.success("Identitas berhasil disimpan.");
       }
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      // Force browser reload to ensure all state is updated
+      window.location.reload();
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");

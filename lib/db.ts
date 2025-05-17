@@ -6,7 +6,7 @@ interface Identitas {
   jabatan: string;
 }
 
-const db = new Dexie("FriendsDatabase") as Dexie & {
+const db = new Dexie("spd-an") as Dexie & {
   identitas: EntityTable<
     Identitas,
     "id" // primary key "id" (for the typings only)
@@ -20,4 +20,3 @@ db.version(1).stores({
 
 export type { Identitas };
 export { db };
-

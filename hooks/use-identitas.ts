@@ -10,7 +10,6 @@ export function useCekIdentitas() {
     async function cekIdentitas() {
       try {
         const identitas = await db.identitas.toArray();
-        console.log(identitas);
         setIsIdentitasFilled(identitas.length > 0);
       } catch (error) {
         console.log(error);
