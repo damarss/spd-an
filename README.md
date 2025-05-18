@@ -58,6 +58,6 @@ SPD-an adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SP
 ## TODO
 
 - [ ] Upgrade state management menggunakan zustand
-- [ ] Fitur manage ketua tim
+- [x] Fitur manage ketua tim
 - [ ] Fitur manage laporan dan input detail laporan
 - [ ] Export laporan ke Word/PDF
