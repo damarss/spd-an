@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Separator } from "@/components/ui/separator";
 import PageTitle from "@/components/page-title";
-import { db } from "@/lib/db";
 import IdentitasGuard from "@/components/identitas-guard";
 import { Toaster } from "sonner";
 
@@ -38,7 +37,7 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <IdentitasGuard>
-              <main className="flex flex-col w-full m-4">
+              <main className="flex flex-col w-full p-4">
                 <header className="flex items-center justify-between">
                   <div className="flex items-center">
                     <SidebarTrigger className="cursor-pointer" />

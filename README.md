@@ -1,6 +1,6 @@
-# SPD-in
+# SPD-an
 
-SPD-in adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SPD) dengan mudah, cepat, dan terstruktur. Aplikasi ini memudahkan pengguna dalam mengisi data identitas, membuat laporan, serta mengelola dokumen perjalanan dinas secara digital.
+SPD-an adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SPD) dengan mudah, cepat, dan terstruktur. Aplikasi ini memudahkan pengguna dalam mengisi data identitas, membuat laporan, serta mengelola dokumen perjalanan dinas secara digital.
 
 ## Fitur Utama
 

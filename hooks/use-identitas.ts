@@ -1,24 +1,11 @@
-import { db } from "@/lib/db";
-import * as React from "react";
+import { useIdentitasStore } from "@/stores/identitas-store";
 
 export function useCekIdentitas() {
-  const [isIdentitasFilled, setIsIdentitasFilled] = React.useState<
-    boolean | undefined
-  >(undefined);
-
-  React.useEffect(() => {
-    async function cekIdentitas() {
-      try {
-        const identitas = await db.identitas.toArray();
-        setIsIdentitasFilled(identitas.length > 0);
-      } catch (error) {
-        console.log(error);
-        setIsIdentitasFilled(false);
-      }
-    }
-
-    cekIdentitas();
-  }, []);
-
+  const { nama, nip, pangkat_golongan, jabatan, unit_kerja, hasHydrated } =
+    useIdentitasStore();
+  if (!hasHydrated) return undefined; // or null, or a loading state
+  const isIdentitasFilled = Boolean(
+    nama && nip && pangkat_golongan && jabatan && unit_kerja
+  );
   return isIdentitasFilled;
 }

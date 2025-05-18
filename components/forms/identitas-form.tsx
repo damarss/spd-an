@@ -15,72 +15,48 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { db, Identitas } from "@/lib/db";
-import { useRouter } from "next/navigation";
+import { useIdentitasStore } from "@/stores/identitas-store";
 
 const formSchema = z.object({
-  nama: z.string().min(1),
-  jabatan: z.string().min(1),
+  nama: z.string().min(1).min(3).max(64),
+  nip: z.string().min(1).min(18).max(18),
+  pangkat_golongan: z.string().min(1),
+  jabatan: z.string().min(1).min(3).max(64),
+  unit_kerja: z.string().min(1).min(3).max(64),
 });
 
-const getIdentitas = async () => {
-  const id = await db.identitas.toArray();
-  if (id.length > 0) {
-    return id[0];
-  }
-
-  return null;
-};
-
 const IdentitasForm = () => {
-  const [identitas, setIdentitas] = React.useState<Identitas | null>(null);
-  const [identitasId, setIdentitasId] = React.useState<number | undefined>(
-    undefined
-  );
-  const router = useRouter();
+  const {
+    nama,
+    nip,
+    pangkat_golongan,
+    jabatan,
+    unit_kerja,
+    setIdentitas,
+    hasHydrated,
+  } = useIdentitasStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nama: "",
-      jabatan: "",
+      nama: nama,
+      nip: nip,
+      pangkat_golongan: pangkat_golongan,
+      jabatan: jabatan,
+      unit_kerja: unit_kerja,
     },
   });
 
-  const fetchIdentitas = React.useCallback(async () => {
-    const data = await getIdentitas();
-    if (data) {
-      setIdentitas(data);
-      setIdentitasId(data.id); // store id for update
-      form.reset({
-        nama: data.nama || "",
-        jabatan: data.jabatan || "",
-      });
-    } else {
-      setIdentitas(null);
-      setIdentitasId(undefined);
-      form.reset({ nama: "", jabatan: "" });
-    }
-  }, [form]);
-
   React.useEffect(() => {
-    fetchIdentitas();
-  }, [fetchIdentitas]);
+    form.reset({ nama, nip, pangkat_golongan, jabatan, unit_kerja });
+  }, [nama, nip, pangkat_golongan, jabatan, unit_kerja, form]);
+
+  if (!hasHydrated) return null; // or a loading spinner
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const { nama, jabatan } = values;
-      if (identitasId !== undefined) {
-        // Update existing identitas
-        await db.identitas.update(identitasId, { nama, jabatan });
-        toast.success("Identitas berhasil diperbarui.");
-      } else {
-        // Insert new identitas
-        await db.identitas.add({ nama, jabatan });
-        toast.success("Identitas berhasil disimpan.");
-      }
-      // Force browser reload to ensure all state is updated
-      window.location.reload();
+      setIdentitas({ ...values, hasHydrated });
+      toast.success("Identitas berhasil disimpan.");
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
@@ -91,7 +67,7 @@ const IdentitasForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-2xl mx-auto py-10"
+        className="space-y-8 max-w-3xl mx-auto py-10"
       >
         <FormField
           control={form.control}
@@ -101,14 +77,48 @@ const IdentitasForm = () => {
               <FormLabel>Nama</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Contoh pengisian: Prajaka, S.Tr.Stat"
+                  placeholder="Contoh: Prajaka, S.Tr.Stat"
                   type="text"
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                Masukkan nama lengkap anda beserta gelar
+                Masukkan nama lengkap Anda beserta gelar
               </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="nip"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>NIP</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="19xxxxxxxxxxxxxxxx"
+                  type="text"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Masukkan NIP 18 digit Anda</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="pangkat_golongan"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Pangkat/Golongan</FormLabel>
+              <FormControl>
+                <Input placeholder="Contoh: III/a" type="text" {...field} />
+              </FormControl>
+              <FormDescription>Masukkan pangkat/golongan Anda</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -122,12 +132,31 @@ const IdentitasForm = () => {
               <FormLabel>Jabatan</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Contoh: Statistisi Ahli Pertama"
+                  placeholder="Contoh: Pranata Komputer Ahli Pertama"
                   type="text"
                   {...field}
                 />
               </FormControl>
-              <FormDescription>Masukkan Jabatan Anda</FormDescription>
+              <FormDescription>Masukkan jabatan Anda</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="unit_kerja"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Unit Kerja</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Contoh: BPS Kabupaten Buol"
+                  type="text"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Masukkan unit kerja Anda</FormDescription>
               <FormMessage />
             </FormItem>
           )}
