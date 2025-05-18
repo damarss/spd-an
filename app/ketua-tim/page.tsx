@@ -15,10 +15,15 @@ import {
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import { useKetuaTimStore } from "@/stores/ketua-tim-store";
-import { Dialog } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogDescription,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import type { KetuaTim } from "./columns";
+import { Plus } from "lucide-react";
 
 export default function KetuaTimPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -83,8 +88,12 @@ export default function KetuaTimPage() {
     <div className="flex flex-col space-y-4 px-2 sm:px-4 py-4 w-full mx-auto">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button onClick={handleAdd} className="w-full sm:w-fit">
-            Tambah Ketua Tim
+          <Button
+            onClick={handleAdd}
+            className="flex items-center gap-2 w-full sm:w-fit"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Tambah Ketua Tim</span>
           </Button>
         </SheetTrigger>
         <SheetContent>
@@ -123,18 +132,19 @@ export default function KetuaTimPage() {
             aria-hidden="true"
           ></div>
         )}
-        <DialogContent className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-zinc-900 rounded-lg shadow-lg p-6 w-full max-w-sm flex flex-col items-center">
-          <DialogTitle className="text-lg font-semibold mb-2 text-center">
-            Konfirmasi Hapus
-          </DialogTitle>
-          <div className="mb-6 text-center">
-            Apakah Anda yakin ingin menghapus ketua tim ini?
-          </div>
-          <div className="flex gap-2 mt-2 justify-center w-full">
-            <Button variant="outline" onClick={cancelDelete} type="button">
+        <DialogContent className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-zinc-900 rounded-lg shadow-lg p-6 w-full max-w-lg flex flex-col items-center">
+          <DialogHeader>
+            <DialogTitle>Hapus Laporan?</DialogTitle>
+            <DialogDescription>
+              Apakah Anda yakin ingin menghapus laporan ini? Tindakan ini tidak
+              dapat dibatalkan.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4 w-full">
+            <Button variant="outline" onClick={cancelDelete}>
               Batal
             </Button>
-            <Button variant="destructive" onClick={confirmDelete} type="button">
+            <Button variant="destructive" onClick={confirmDelete}>
               Hapus
             </Button>
           </div>

@@ -8,7 +8,9 @@ const PageTitle = () => {
   const pathname = usePathname();
   return (
     <h1 className="text-lg font-medium">
-      {items.find((item) => item.url === pathname)?.title || ""}
+      {pathname.startsWith("/laporan/detail")
+        ? "Laporan"
+        : items.find((item) => item.url === pathname)?.title || ""}
     </h1>
   );
 };

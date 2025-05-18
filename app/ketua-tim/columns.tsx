@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 
 // This type is used to define the shape of our data.
@@ -34,20 +35,18 @@ export const columns: ColumnDef<KetuaTim>[] = [
       };
       return (
         <div className="flex gap-2">
-          <button
-            className="cursor-pointer px-3 py-2 text-sm rounded bg-primary text-primary-foreground hover:bg-primary/90 min-w-[64px]"
+          <Button
+            className="cursor-pointer text-sm bg-primary text-primary-foreground hover:bg-primary/90 min-w-[64px]"
             onClick={() => meta?.onEdit?.(ketua)}
-            type="button"
           >
             Edit
-          </button>
-          <button
-            className="cursor-pointer px-3 py-2 text-sm rounded text-primary-foreground bg-destructive text-destructive-foreground hover:bg-destructive/90 min-w-[64px]"
+          </Button>
+          <Button
+            className="cursor-pointer text-sm !text-primary-foreground bg-destructive text-destructive-foreground hover:bg-destructive/90 min-w-[64px]"
             onClick={() => meta?.onDelete?.(ketua)}
-            type="button"
           >
             Hapus
-          </button>
+          </Button>
         </div>
       );
     },

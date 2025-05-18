@@ -27,6 +27,7 @@ import {
 import { useKetuaTimStore } from "@/stores/ketua-tim-store";
 import { useLaporanStore } from "@/stores/laporan-store";
 import { ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 
 const formSchema = z
   .object({
@@ -62,11 +63,12 @@ const formSchema = z
   );
 
 type LaporanFormProps = {
+  laporanId?: number;
   onSuccess?: () => void;
   initialValues?: {
     kecamatan_tujuan: string;
-    tanggal_mulai: string;
-    tanggal_selesai: string;
+    tanggal_mulai: Date;
+    tanggal_selesai: Date;
     perihal: string;
     id_ketua: number;
   };
@@ -74,6 +76,7 @@ type LaporanFormProps = {
 };
 
 const LaporanForm: React.FC<LaporanFormProps> = ({
+  laporanId,
   onSuccess,
   initialValues,
   onSubmitAction,
@@ -82,19 +85,49 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
   const { addLaporan, updateLaporan } = useLaporanStore();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialValues || {
-      kecamatan_tujuan: "",
-      tanggal_mulai: "",
-      tanggal_selesai: "",
-      perihal: "",
-      id_ketua: undefined, // do not select by default
-    },
+    defaultValues: initialValues
+      ? {
+          ...initialValues,
+          tanggal_mulai:
+            typeof initialValues.tanggal_mulai === "string"
+              ? initialValues.tanggal_mulai
+              : initialValues.tanggal_mulai instanceof Date
+              ? initialValues.tanggal_mulai.toISOString().slice(0, 10)
+              : "",
+          tanggal_selesai:
+            typeof initialValues.tanggal_selesai === "string"
+              ? initialValues.tanggal_selesai
+              : initialValues.tanggal_selesai instanceof Date
+              ? initialValues.tanggal_selesai.toISOString().slice(0, 10)
+              : "",
+        }
+      : {
+          kecamatan_tujuan: "",
+          tanggal_mulai: "",
+          tanggal_selesai: "",
+          perihal: "",
+          id_ketua: undefined,
+        },
     mode: "onTouched",
   });
 
   React.useEffect(() => {
     if (initialValues) {
-      form.reset(initialValues);
+      form.reset({
+        ...initialValues,
+        tanggal_mulai:
+          typeof initialValues.tanggal_mulai === "string"
+            ? initialValues.tanggal_mulai
+            : initialValues.tanggal_mulai instanceof Date
+            ? initialValues.tanggal_mulai.toISOString().slice(0, 10)
+            : "",
+        tanggal_selesai:
+          typeof initialValues.tanggal_selesai === "string"
+            ? initialValues.tanggal_selesai
+            : initialValues.tanggal_selesai instanceof Date
+            ? initialValues.tanggal_selesai.toISOString().slice(0, 10)
+            : "",
+      });
     }
   }, [initialValues, form]);
 
@@ -108,8 +141,22 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
       }
       if (onSubmitAction) {
         onSubmitAction(values);
-      } else if (initialValues) {
-        // updateLaporan logic here if needed
+        toast.success("Laporan berhasil disimpan.");
+      } else if (laporanId) {
+        // updateLaporan logic here
+        updateLaporan(laporanId, {
+          kecamatan_tujuan: values.kecamatan_tujuan,
+          tanggal_mulai: new Date(values.tanggal_mulai),
+          tanggal_selesai: new Date(values.tanggal_selesai),
+          perihal: values.perihal,
+          id_ketua: values.id_ketua as number,
+          details:
+            useLaporanStore
+              .getState()
+              .laporanList.find((l) => l.id === laporanId)
+              ?.details.concat() || [],
+        });
+        toast.success("Laporan berhasil diperbarui.");
       } else {
         addLaporan({
           ...values,
@@ -118,17 +165,31 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
           tanggal_selesai: new Date(values.tanggal_selesai),
           details: [], // required by Laporan type
         });
+        toast.success("Laporan berhasil ditambahkan.");
       }
       if (onSuccess) onSuccess();
       form.reset();
     } catch (error) {
-      // handle error
+      toast.error("Terjadi kesalahan saat menyimpan laporan.");
     }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mx-4">
+        <FormField
+          control={form.control}
+          name="perihal"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Perihal</FormLabel>
+              <FormControl>
+                <Input placeholder="Contoh: Survei Sosial Ekonomi" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="kecamatan_tujuan"
@@ -171,40 +232,29 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
               )}
             />
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10 px-3 whitespace-nowrap mb-2"
-            onClick={() => {
-              const today = new Date();
-              const yyyy = today.getFullYear();
-              const mm = String(today.getMonth() + 1).padStart(2, "0");
-              const dd = String(today.getDate()).padStart(2, "0");
-              const todayStr = `${yyyy}-${mm}-${dd}`;
-              form.setValue("tanggal_mulai", todayStr, {
-                shouldValidate: true,
-              });
-              form.setValue("tanggal_selesai", todayStr, {
-                shouldValidate: true,
-              });
-            }}
-          >
-            Gunakan tanggal hari ini
-          </Button>
-        </div>
-        <FormField
-          control={form.control}
-          name="perihal"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Perihal</FormLabel>
-              <FormControl>
-                <Input placeholder="Contoh: Survei Sosial Ekonomi" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          {!initialValues && (
+            <Button
+              type="button"
+              variant="outline"
+              className="h-10 px-3 whitespace-nowrap mb-2"
+              onClick={() => {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, "0");
+                const dd = String(today.getDate()).padStart(2, "0");
+                const todayStr = `${yyyy}-${mm}-${dd}`;
+                form.setValue("tanggal_mulai", todayStr, {
+                  shouldValidate: true,
+                });
+                form.setValue("tanggal_selesai", todayStr, {
+                  shouldValidate: true,
+                });
+              }}
+            >
+              Gunakan tanggal hari ini
+            </Button>
           )}
-        />
+        </div>
         <FormField
           control={form.control}
           name="id_ketua"

@@ -14,17 +14,16 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import LaporanForm from "@/components/forms/laporan-form";
 import { Plus, Search, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LaporanPage() {
   const laporanList = useLaporanStore((state) => state.laporanList);
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  // Placeholder for edit functionality
-  // const [editId, setEditId] = useState<number | null>(null);
+  const router = useRouter();
 
   // Handler for opening the sheet in add mode
   const handleAdd = () => {
-    // setEditId(null);
     setIsOpen(true);
   };
 
@@ -40,7 +39,6 @@ export default function LaporanPage() {
         <Button
           onClick={handleAdd}
           className="flex items-center gap-2 w-full sm:w-fit"
-          size="sm"
         >
           <Plus className="w-4 h-4" />
           <span>Tambah Laporan</span>
@@ -59,7 +57,6 @@ export default function LaporanPage() {
         </div>
       </div>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        {/* SheetTrigger is not needed since we use the button above */}
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Tambah Laporan</SheetTitle>
@@ -80,10 +77,11 @@ export default function LaporanPage() {
             <Card
               key={laporan.id}
               className="h-full p-6 flex flex-col gap-2 border border-muted-foreground/10 shadow-sm transition-shadow bg-card min-w-[340px] max-w-full group hover:shadow-md hover:border-primary/40 rounded-2xl cursor-pointer"
+              onClick={() => router.push(`/laporan/detail?id=${laporan.id}`)}
             >
               <div className="flex items-center justify-between mb-1">
                 <div
-                  className="font-semibold text-base truncate transition-colors group-hover:text-primary"
+                  className="font-semibold text-base truncate transition-colors"
                   title={laporan.perihal}
                 >
                   {laporan.perihal}
