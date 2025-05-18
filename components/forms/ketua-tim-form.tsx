@@ -30,15 +30,16 @@ const KetuaTimForm = ({
   onSubmitAction,
 }: {
   onSuccess?: () => void;
-  initialValues?: { nama: string; jabatan: string; nip: string };
+  initialValues?: { id?: number; nama: string; jabatan: string; nip: string };
   onSubmitAction?: (values: {
+    id?: number;
     nama: string;
     jabatan: string;
     nip: string;
   }) => void;
 }) => {
   const { addKetuaTim, updateKetuaTim } = useKetuaTimStore();
-  const isEdit = Boolean(initialValues);
+  const isEdit = Boolean(initialValues && initialValues.id !== undefined);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialValues || {
@@ -57,10 +58,9 @@ const KetuaTimForm = ({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (onSubmitAction) {
-        onSubmitAction(values);
-      } else if (isEdit && initialValues) {
-        // You need to pass the index or id for update in your usage
-        // updateKetuaTim(index, values);
+        onSubmitAction({ ...values, id: initialValues?.id });
+      } else if (isEdit && initialValues && initialValues.id !== undefined) {
+        updateKetuaTim(initialValues.id, values);
       } else {
         addKetuaTim(values);
       }

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type KetuaTim = {
+  id: number;
   nama: string;
   jabatan: string;
   nip: string;
@@ -12,28 +13,32 @@ export type KetuaTimState = {
 };
 
 export type KetuaTimActions = {
-  addKetuaTim: (ketuaTim: KetuaTim) => void;
-  updateKetuaTim: (index: number, ketuaTim: KetuaTim) => void;
-  deleteKetuaTim: (index: number) => void;
+  addKetuaTim: (ketuaTim: Omit<KetuaTim, "id">) => void;
+  updateKetuaTim: (id: number, ketuaTim: Omit<KetuaTim, "id">) => void;
+  deleteKetuaTim: (id: number) => void;
 };
 
 export type KetuaTimStore = KetuaTimState & KetuaTimActions;
 
 export const useKetuaTimStore = create<KetuaTimStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ketuaList: [],
-      addKetuaTim: (ketuaTim: KetuaTim) =>
-        set((state) => ({ ketuaList: [...state.ketuaList, ketuaTim] })),
-      updateKetuaTim: (index, ketuaTim) =>
+      addKetuaTim: (ketuaTim) => {
+        const list = get().ketuaList;
+        const nextId =
+          list.length > 0 ? Math.max(...list.map((k) => k.id)) + 1 : 1;
+        set({ ketuaList: [...list, { ...ketuaTim, id: nextId }] });
+      },
+      updateKetuaTim: (id, ketuaTim) =>
         set((state) => ({
-          ketuaList: state.ketuaList.map((k, i) =>
-            i === index ? ketuaTim : k
+          ketuaList: state.ketuaList.map((k) =>
+            k.id === id ? { ...ketuaTim, id } : k
           ),
         })),
-      deleteKetuaTim: (index) =>
+      deleteKetuaTim: (id) =>
         set((state) => ({
-          ketuaList: state.ketuaList.filter((_, i) => i !== index),
+          ketuaList: state.ketuaList.filter((k) => k.id !== id),
         })),
     }),
     {

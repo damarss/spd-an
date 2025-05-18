@@ -22,55 +22,60 @@ import type { KetuaTim } from "./columns";
 
 export default function KetuaTimPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const ketuaList = useKetuaTimStore((state) => state.ketuaList);
   const { updateKetuaTim, deleteKetuaTim } = useKetuaTimStore();
 
   // Handler for opening the sheet in edit mode
-  const handleEdit = (ketua: KetuaTim, index: number) => {
-    setEditIndex(index);
+  const handleEdit = (ketua: KetuaTim) => {
+    setEditId(ketua.id);
     setIsOpen(true);
   };
 
   // Handler for opening the sheet in add mode
   const handleAdd = () => {
-    setEditIndex(null);
+    setEditId(null);
     setIsOpen(true);
   };
 
   // Handler for deleting (open dialog)
-  const handleDelete = (_ketua: KetuaTim, index: number) => {
-    setDeleteIndex(index);
+  const handleDelete = (ketua: KetuaTim) => {
+    setDeleteId(ketua.id);
     setShowDeleteDialog(true);
   };
 
   // Confirm delete
   const confirmDelete = () => {
-    if (deleteIndex !== null) {
-      deleteKetuaTim(deleteIndex);
+    if (deleteId !== null) {
+      deleteKetuaTim(deleteId);
     }
     setShowDeleteDialog(false);
-    setDeleteIndex(null);
+    setDeleteId(null);
   };
 
   // Cancel delete
   const cancelDelete = () => {
     setShowDeleteDialog(false);
-    setDeleteIndex(null);
+    setDeleteId(null);
   };
 
   // Get initial values for edit
   const initialValues =
-    editIndex !== null && ketuaList[editIndex]
-      ? ketuaList[editIndex]
+    editId !== null && ketuaList.find((k) => k.id === editId)
+      ? ketuaList.find((k) => k.id === editId)
       : undefined;
 
   // Submit action for edit
-  const onSubmitAction = (values: KetuaTim) => {
-    if (editIndex !== null) {
-      updateKetuaTim(editIndex, values);
+  const onSubmitAction = (values: {
+    id?: number;
+    nama: string;
+    jabatan: string;
+    nip: string;
+  }) => {
+    if (editId !== null) {
+      updateKetuaTim(editId, values);
     }
   };
 
@@ -85,10 +90,10 @@ export default function KetuaTimPage() {
         <SheetContent>
           <SheetHeader>
             <SheetTitle>
-              {editIndex !== null ? "Edit Ketua Tim" : "Tambah Ketua Tim"}
+              {editId !== null ? "Edit Ketua Tim" : "Tambah Ketua Tim"}
             </SheetTitle>
             <SheetDescription>
-              {editIndex !== null
+              {editId !== null
                 ? "Edit data ketua tim."
                 : "Isikan data ketua tim yang akan ditambahkan."}
             </SheetDescription>
@@ -96,7 +101,7 @@ export default function KetuaTimPage() {
           <KetuaTimForm
             onSuccess={() => setIsOpen(false)}
             initialValues={initialValues}
-            onSubmitAction={editIndex !== null ? onSubmitAction : undefined}
+            onSubmitAction={editId !== null ? onSubmitAction : undefined}
           />
         </SheetContent>
       </Sheet>
@@ -114,11 +119,11 @@ export default function KetuaTimPage() {
         {/* Custom backdrop for blur and overlay */}
         {showDeleteDialog && (
           <div
-            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm transition-all"
+            className="fixed inset-0 z-40 h-full w-full bg-black/30 backdrop-blur-sm transition-all"
             aria-hidden="true"
           ></div>
         )}
-        <DialogContent className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-6 w-full max-w-sm flex flex-col items-center">
+        <DialogContent className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background dark:bg-zinc-900 rounded-lg shadow-lg p-6 w-full max-w-sm flex flex-col items-center">
           <DialogTitle className="text-lg font-semibold mb-2 text-center">
             Konfirmasi Hapus
           </DialogTitle>

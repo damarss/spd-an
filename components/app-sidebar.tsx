@@ -35,14 +35,14 @@ export const items = [
     icon: FileText,
   },
   {
-    title: "Identitas",
-    url: "/identitas",
-    icon: UserRoundPen,
-  },
-  {
     title: "Ketua Tim",
     url: "/ketua-tim",
     icon: UsersRound,
+  },
+  {
+    title: "Identitas",
+    url: "/identitas",
+    icon: UserRoundPen,
   },
 ];
 
