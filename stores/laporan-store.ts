@@ -18,14 +18,16 @@ export type Laporan = {
   id_ketua: number;
   is_spd: boolean;
   details: LaporanDetail[];
+  modified_at: Date;
 };
 
 export type LaporanState = {
   laporanList: Laporan[];
+  nextId: number;
 };
 
 export type LaporanActions = {
-  addLaporan: (laporan: Omit<Laporan, "id">) => void;
+  addLaporan: (laporan: Omit<Laporan, "id" | "created_at">) => void;
   updateLaporan: (id: number, laporan: Omit<Laporan, "id">) => void;
   deleteLaporan: (id: number) => void;
   addLaporanDetail: (
@@ -46,13 +48,18 @@ export const useLaporanStore = create<LaporanStore>()(
   persist(
     (set, get) => ({
       laporanList: [],
+      nextId: 1,
       addLaporan: (laporan) => {
-        const list = get().laporanList;
-        const nextId =
-          list.length > 0 ? Math.max(...list.map((l) => l.id)) + 1 : 1;
-        set({
-          laporanList: [...list, { ...laporan, id: nextId, details: [] }],
-        });
+        const newId = get().nextId;
+        const newLaporan = {
+          ...laporan,
+          id: newId,
+          modified_at: new Date(),
+        };
+        set((state) => ({
+          laporanList: [...state.laporanList, newLaporan],
+          nextId: newId + 1,
+        }));
       },
       updateLaporan: (id, laporan) =>
         set((state) => ({

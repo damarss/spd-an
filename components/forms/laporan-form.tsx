@@ -157,6 +157,7 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
           perihal: values.perihal,
           id_ketua: values.id_ketua as number,
           is_spd: values.is_spd,
+          modified_at: new Date(),
           details:
             useLaporanStore
               .getState()
@@ -166,12 +167,14 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
         toast.success("Laporan berhasil diperbarui.");
       } else {
         addLaporan({
-          ...values,
-          id_ketua: values.id_ketua as number, // ensure id_ketua is number
+          kecamatan_tujuan: values.kecamatan_tujuan,
           tanggal_mulai: new Date(values.tanggal_mulai),
           tanggal_selesai: new Date(values.tanggal_selesai),
+          perihal: values.perihal,
+          id_ketua: values.id_ketua as number,
           is_spd: values.is_spd,
-          details: [], // required by Laporan type
+          details: [],
+          modified_at: new Date(),
         });
         toast.success("Laporan berhasil ditambahkan.");
       }

@@ -28,11 +28,18 @@ export default function LaporanPage() {
     setIsOpen(true);
   };
 
-  const filteredLaporan = laporanList.filter(
-    (laporan) =>
-      laporan.perihal.toLowerCase().includes(search.toLowerCase()) ||
-      laporan.kecamatan_tujuan.toLowerCase().includes(search.toLowerCase())
-  );
+  // Sort laporan by created_at (descending)
+  const filteredLaporan = laporanList
+    .filter(
+      (laporan) =>
+        laporan.perihal.toLowerCase().includes(search.toLowerCase()) ||
+        laporan.kecamatan_tujuan.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => {
+      const dateA = new Date(a.modified_at);
+      const dateB = new Date(b.modified_at);
+      return dateB.getTime() - dateA.getTime();
+    });
 
   return (
     <div className="flex flex-col space-y-4 px-2 sm:px-4 py-4 w-full mx-auto">
