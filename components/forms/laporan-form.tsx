@@ -28,6 +28,7 @@ import { useKetuaTimStore } from "@/stores/ketua-tim-store";
 import { useLaporanStore } from "@/stores/laporan-store";
 import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z
   .object({
@@ -36,6 +37,7 @@ const formSchema = z
     tanggal_selesai: z.string().min(1),
     perihal: z.string().min(1),
     id_ketua: z.number().optional(),
+    is_spd: z.boolean(),
   })
   .refine(
     (data) => {
@@ -71,6 +73,7 @@ type LaporanFormProps = {
     tanggal_selesai: Date;
     perihal: string;
     id_ketua: number;
+    is_spd: boolean;
   };
   onSubmitAction?: (values: z.infer<typeof formSchema>) => void;
 };
@@ -100,6 +103,7 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
               : initialValues.tanggal_selesai instanceof Date
               ? initialValues.tanggal_selesai.toISOString().slice(0, 10)
               : "",
+          is_spd: initialValues.is_spd,
         }
       : {
           kecamatan_tujuan: "",
@@ -107,6 +111,7 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
           tanggal_selesai: "",
           perihal: "",
           id_ketua: undefined,
+          is_spd: false,
         },
     mode: "onTouched",
   });
@@ -127,6 +132,7 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
             : initialValues.tanggal_selesai instanceof Date
             ? initialValues.tanggal_selesai.toISOString().slice(0, 10)
             : "",
+        is_spd: initialValues.is_spd ?? false,
       });
     }
   }, [initialValues, form]);
@@ -150,6 +156,7 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
           tanggal_selesai: new Date(values.tanggal_selesai),
           perihal: values.perihal,
           id_ketua: values.id_ketua as number,
+          is_spd: values.is_spd,
           details:
             useLaporanStore
               .getState()
@@ -163,6 +170,7 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
           id_ketua: values.id_ketua as number, // ensure id_ketua is number
           tanggal_mulai: new Date(values.tanggal_mulai),
           tanggal_selesai: new Date(values.tanggal_selesai),
+          is_spd: values.is_spd,
           details: [], // required by Laporan type
         });
         toast.success("Laporan berhasil ditambahkan.");
@@ -197,7 +205,7 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
             <FormItem>
               <FormLabel>Kecamatan Tujuan</FormLabel>
               <FormControl>
-                <Input placeholder="Contoh: Biau" {...field} />
+                <Input placeholder="Contoh: Kecamatan Biau" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -305,7 +313,26 @@ const LaporanForm: React.FC<LaporanFormProps> = ({
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        <FormField
+          control={form.control}
+          name="is_spd"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center gap-3">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  id="is_spd"
+                />
+              </FormControl>
+              <FormLabel htmlFor="is_spd" className="mb-0 cursor-pointer">
+                Centang jika minimal 8 jam
+              </FormLabel>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="py-5 w-full">
           {initialValues ? "Simpan" : "Tambah"}
         </Button>
       </form>

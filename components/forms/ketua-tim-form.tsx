@@ -139,7 +139,9 @@ const KetuaTimForm = ({
             </FormItem>
           )}
         />
-        <Button type="submit">{isEdit ? "Simpan" : "Tambah"}</Button>
+        <Button className="w-full py-5" type="submit">
+          {isEdit ? "Simpan" : "Tambah"}
+        </Button>
       </form>
     </Form>
   );

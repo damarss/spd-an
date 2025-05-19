@@ -161,7 +161,9 @@ const IdentitasForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Simpan</Button>
+        <Button className="w-full md:w-fit py-5" type="submit">
+          Simpan
+        </Button>
       </form>
     </Form>
   );

@@ -15,6 +15,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Props = {};
 
@@ -44,9 +46,16 @@ const LaporanDetailPage = (props: Props) => {
   }
 
   return (
-    <div className="w-full mx-auto py-8 px-2">
+    <div className="w-full mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold">Detail Laporan</h2>
+        <Button
+          variant="ghost"
+          onClick={() => router.back()}
+          aria-label="Kembali ke daftar laporan"
+        >
+          <ChevronLeft className="w-6 h-6 transition-colors group-hover:text-primary" />
+          <span>Kembali</span>
+        </Button>
         <Button variant="destructive" onClick={() => setOpenDialog(true)}>
           Hapus Laporan
         </Button>
@@ -73,24 +82,28 @@ const LaporanDetailPage = (props: Props) => {
       </Dialog>
       {/* End Dialog */}
       <Tabs value={tab} onValueChange={setTab} className="w-full">
-        <TabsList className="flex justify-between w-full mb-6 bg-transparent gap-2">
+        <TabsList className="flex justify-between w-full p-1.5 mb-6 rounded-full h-fit gap-2 bg-black/6 dark:bg-white/6 backdrop-blur-sm">
           <TabsTrigger
             value="edit"
-            className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
+            className="flex-1 py-1.5 relative data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
           >
-            <span className="font-bold mr-2">1</span> Edit Laporan
+            <span className="font-bold mr-2">1</span>
+            <span>Edit</span>
+            <ChevronRight className="absolute right-3" />
           </TabsTrigger>
           <TabsTrigger
             value="detail"
-            className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
+            className="flex-1 py-1.5 relative data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
           >
-            <span className="font-bold mr-2">2</span> Isi Detail
+            <span className="font-bold mr-2">2</span>
+            <span>Isi Detail</span>
+            <ChevronRight className="absolute right-3" />
           </TabsTrigger>
           <TabsTrigger
             value="report"
-            className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
+            className="flex-1 py-1.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
           >
-            <span className="font-bold mr-2">3</span> Generate Laporan
+            <span className="font-bold mr-2">3</span> Generate
           </TabsTrigger>
         </TabsList>
         <TabsContent value="edit">
@@ -108,6 +121,7 @@ const LaporanDetailPage = (props: Props) => {
                   : laporan.tanggal_selesai,
               perihal: laporan.perihal,
               id_ketua: laporan.id_ketua,
+              is_spd: laporan.is_spd,
             }}
           />
         </TabsContent>

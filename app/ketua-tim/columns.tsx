@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import { Pencil, Trash2 } from "lucide-react";
 
 // This type is used to define the shape of our data.
 export type KetuaTim = {
@@ -35,17 +36,11 @@ export const columns: ColumnDef<KetuaTim>[] = [
       };
       return (
         <div className="flex gap-2">
-          <Button
-            className="cursor-pointer text-sm bg-primary text-primary-foreground hover:bg-primary/90 min-w-[64px]"
-            onClick={() => meta?.onEdit?.(ketua)}
-          >
-            Edit
+          <Button variant="outline" onClick={() => meta?.onEdit?.(ketua)}>
+            <Pencil className="w-4 h-4 mr-1" /> Edit
           </Button>
-          <Button
-            className="cursor-pointer text-sm !text-primary-foreground bg-destructive text-destructive-foreground hover:bg-destructive/90 min-w-[64px]"
-            onClick={() => meta?.onDelete?.(ketua)}
-          >
-            Hapus
+          <Button variant="destructive" onClick={() => meta?.onDelete?.(ketua)}>
+            <Trash2 className="w-4 h-4 mr-1" /> Hapus
           </Button>
         </div>
       );

@@ -15,6 +15,7 @@ import { useState } from "react";
 import LaporanForm from "@/components/forms/laporan-form";
 import { Plus, Search, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 export default function LaporanPage() {
   const laporanList = useLaporanStore((state) => state.laporanList);
@@ -35,7 +36,7 @@ export default function LaporanPage() {
 
   return (
     <div className="flex flex-col space-y-4 px-2 sm:px-4 py-4 w-full mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
         <Button
           onClick={handleAdd}
           className="flex items-center gap-2 w-full sm:w-fit"
@@ -47,7 +48,7 @@ export default function LaporanPage() {
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             <Search className="w-4 h-4" />
           </span>
-          <input
+          <Input
             type="text"
             placeholder="Cari laporan..."
             value={search}

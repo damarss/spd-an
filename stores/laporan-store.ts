@@ -7,7 +7,6 @@ export type LaporanDetail = {
   jam_mulai: string; // format: HH:mm
   jam_selesai: string; // format: HH:mm
   durasi: number; // in hours
-  jenis: "spd" | "non-spd";
 };
 
 export type Laporan = {
@@ -17,6 +16,7 @@ export type Laporan = {
   tanggal_selesai: Date;
   perihal: string;
   id_ketua: number;
+  is_spd: boolean;
   details: LaporanDetail[];
 };
 
