@@ -4,9 +4,8 @@ import { persist } from "zustand/middleware";
 export type LaporanDetail = {
   id: number;
   uraian: string;
-  jam_mulai: string; // format: HH:mm
-  jam_selesai: string; // format: HH:mm
-  durasi: number; // in hours
+  waktu_mulai: Date;
+  waktu_selesai: Date;
 };
 
 export type Laporan = {
