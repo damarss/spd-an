@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Calendar,
   FileText,
@@ -9,6 +11,7 @@ import {
   UserRoundPen,
   UsersRound,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -47,6 +50,7 @@ export const items = [
 ];
 
 export function AppSidebar() {
+  const pathname = usePathname();
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -56,10 +60,19 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton tooltip={item.title} asChild>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    asChild
+                    className={
+                      "transition-colors text-foreground/60 text-base font-medium" +
+                      " data-[state=active]:bg-primary/10 data-[state=active]:text-foreground" +
+                      " hover:bg-muted"
+                    }
+                    data-state={pathname === item.url ? "active" : undefined}
+                  >
                     <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                      <item.icon size={22} className="shrink-0" />
+                      <span className="truncate">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
