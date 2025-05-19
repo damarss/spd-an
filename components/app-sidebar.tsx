@@ -63,12 +63,13 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     tooltip={item.title}
                     asChild
-                    className={
-                      "transition-colors text-foreground/60 text-base font-medium" +
-                      " data-[state=active]:bg-primary/10 data-[state=active]:text-foreground" +
-                      " hover:bg-muted"
-                    }
-                    data-state={pathname === item.url ? "active" : undefined}
+                    className={[
+                      "flex w-full items-center gap-2 overflow-hidden rounded-lg px-4 py-3 transition-colors text-foreground/60 text-base font-medium",
+                      pathname === item.url
+                        ? "bg-primary/10 text-foreground"
+                        : "",
+                      "hover:bg-muted",
+                    ].join(" ")}
                   >
                     <Link href={item.url}>
                       <item.icon size={22} className="shrink-0" />
