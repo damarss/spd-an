@@ -4,9 +4,7 @@ SPD-an adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SP
 
 ## Fitur Utama
 
-- Input identitas dan jabatan pengguna
 - Pembuatan laporan perjalanan dinas secara otomatis
-- Data tersimpan secara lokal di browser (IndexedDB)
 
 ## Instalasi
 
@@ -18,18 +16,10 @@ SPD-an adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SP
 2. Install dependencies:
    ```sh
    pnpm install
-   # atau
-   npm install
-   # atau
-   yarn install
    ```
 3. Jalankan aplikasi secara lokal:
    ```sh
    pnpm dev
-   # atau
-   npm run dev
-   # atau
-   yarn dev
    ```
 4. Buka browser dan akses `http://localhost:3000`
 
@@ -38,7 +28,7 @@ SPD-an adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SP
 - `app/` — Halaman Next.js dan entry point aplikasi
 - `components/` — Komponen UI dan logic aplikasi
 - `hooks/` — Custom React hooks
-- `lib/` — Library utilitas dan konfigurasi database
+- `lib/` — Library utilitas
 
 ## Cara Penggunaan
 
@@ -52,12 +42,11 @@ SPD-an adalah aplikasi web untuk membantu pembuatan laporan perjalanan dinas (SP
 - Next.js
 - React
 - Tailwind CSS
-- Zustand (opsional, untuk state management)
-- IndexedDB (penyimpanan lokal)
+- Zustand
 
 ## TODO
 
-- [ ] Upgrade state management menggunakan zustand
+- [x] Upgrade state management menggunakan zustand
 - [x] Fitur manage ketua tim
-- [ ] Fitur manage laporan dan input detail laporan
+- [x] Fitur manage laporan dan input detail laporan
 - [ ] Export laporan ke Word/PDF
